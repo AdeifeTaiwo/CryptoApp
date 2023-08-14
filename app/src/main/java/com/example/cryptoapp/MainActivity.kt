@@ -1,0 +1,260 @@
+package com.example.cryptoapp
+
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.cryptoapp.model.CryptoCurrencyInfo
+import com.example.cryptoapp.reusables.drawCurvyLines
+import com.example.cryptoapp.ui.theme.CryptoAppTheme
+import com.example.cryptoapp.ui.theme.CryptoOrange
+import com.example.cryptoapp.ui.theme.CryptoOrange2
+import com.example.cryptoapp.ui.theme.CryptoOrange3
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            CryptoAppTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    CTAMyCryptoCapHeader()
+                    CTAMyCryptoCap()
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun Greeting(name: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "Hello $name!",
+        modifier = modifier
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CyptoCapPreview() {
+    CryptoAppTheme {
+        CTAMyCryptoCap()
+    }
+}
+
+private val mockData = CryptoCurrencyInfo(
+    39_532.84f,
+    "NGN", listOf(
+        Pair("Jan", 15000f),
+        Pair("Feb", 20000f),
+        Pair("Mar", 38000f),
+        Pair("Apr", 8000f),
+        Pair("May", 10000f),
+        Pair("June", 12300f)
+    )
+)
+
+@Preview(showBackground = true)
+@Composable
+fun CyptoCapHone() {
+    CryptoAppTheme {
+        CTAMyCryptoCapHome()
+    }
+}
+
+@Composable
+fun CTAMyCryptoCapHome(){
+    Column(modifier = Modifier.fillMaxSize()) {
+        CTAMyCryptoCapHeader()
+        CTAMyCryptoCap()
+    }
+}
+
+@Composable
+fun CTAMyCryptoCap(modifier: Modifier = Modifier, mockUIData: CryptoCurrencyInfo = mockData) {
+
+    val verticalOrangeGradient = Brush.verticalGradient(
+        colors = listOf(
+            CryptoOrange2,
+            CryptoOrange3
+        )
+    )
+    Card(
+        modifier = Modifier
+            .background(color = Color.White)
+            .padding(10.dp)
+            .fillMaxWidth()
+            .height(350.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = CryptoOrange
+        ),
+        shape = RoundedCornerShape(4)
+
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(verticalOrangeGradient)
+                .drawBehind {
+                    this.drawCurvyLines()
+                }
+        ) {
+            Column(modifier = Modifier.padding(top = 50.dp, start = 8.dp, end = 8.dp)) {
+                Text(
+                    text = "MY Crypto Cap",
+                    color = Color.White,
+                    style = MaterialTheme.typography.displaySmall,
+                    fontWeight = FontWeight.ExtraLight
+                )
+
+                Text(
+                    text = "${mockUIData.value} ${mockUIData.currency}",
+                    color = Color.White,
+                    style = MaterialTheme.typography.displayMedium,
+                    fontWeight = FontWeight.ExtraBold
+                )
+
+                MonthlyCapPreview(mockUIData.monthlyPreview)
+            }
+        }
+    }
+}
+
+@Composable
+fun MonthlyCapPreview(monthlyPreview: List<Pair<String, Float>>) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+        val maxMonthValue = monthlyPreview.maxBy {
+            it.second
+        }.second
+        Row(
+            modifier = Modifier.fillMaxHeight(.8f),
+            verticalAlignment = Alignment.Bottom
+        ) {
+            for (pairPreview in monthlyPreview) {
+                val columnHeight = pairPreview.second / maxMonthValue
+                Card(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(columnHeight)
+                        .padding(5.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = setHighlightColor(pairPreview, maxMonthValue)
+                    ),
+                    shape = RoundedCornerShape(30)
+                ) { }
+            }
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            for (pairReview in monthlyPreview) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = pairReview.first,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.SemiBold,
+                    color = setHighlightColor(
+                        pairPreview = pairReview,
+                        maxMonthValue = maxMonthValue
+                    )
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun setHighlightColor( //<--- Helper function to determine colour of Text and Bar
+    pairPreview: Pair<String, Float>,
+    maxMonthValue: Float
+) = if (pairPreview.second == maxMonthValue) Color.White else Color.White.copy(
+    alpha = 0.4f
+)
+
+@Preview(showBackground = true)
+@Composable
+fun CyptoCapHeaderPreview() {
+    CryptoAppTheme {
+        CTAMyCryptoCapHeader()
+    }
+}
+
+@Composable
+fun CTAMyCryptoCapHeader() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp),
+    ) {
+        Column {
+
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Image(painterResource(id = R.drawable.fund_wallet_svg), contentDescription = null)
+
+                Image(
+                    painterResource(id = R.drawable.notifications_bell),
+                    contentDescription = null,
+                    modifier = Modifier.size(40.dp),
+                    alpha = .6f
+                )
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 30.dp, end = 30.dp)
+            ) {
+                Text(text = "Today's \nTrade Value", fontWeight = FontWeight.SemiBold)
+                Text(
+                    text = "+980.6 USD",
+                    fontWeight = FontWeight.Normal,
+                    color = CryptoOrange3,
+                    fontSize = 30.sp
+                )
+
+            }
+
+        }
+    }
+}

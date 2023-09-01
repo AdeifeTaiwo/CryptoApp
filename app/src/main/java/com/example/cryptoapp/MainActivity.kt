@@ -189,10 +189,12 @@ fun CTAMyCryptoCapHome() {
     Column(modifier = Modifier.fillMaxSize()) {
         CTAMyCryptoCapHeader()
         CTAMyCryptoCap()
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(4.dp))
         CurrentCryptoItemColumn(featureList)
+        Spacer(modifier = Modifier.height(10.dp))
     }
 }
+
 
 @Composable
 fun CTAMyCryptoCap(modifier: Modifier = Modifier, mockUIData: CryptoCurrencyInfo = mockData) {
@@ -301,11 +303,29 @@ fun CurrentCryptoItemColumn(featureList: List<Feature>) {
             .padding(8.dp)
             .clip(RoundedCornerShape(4.dp))
     ) {
+
+        Text(
+            text = "Data Insight",
+            modifier = Modifier.padding(8.dp),
+            color = Color.Black,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = "Click to see more data",
+            modifier = Modifier.padding(8.dp),
+            color = Color.Black,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Light
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),
             contentPadding = PaddingValues(start = 7.5.dp, bottom = 50.dp, end = 7.5.dp),
             modifier = Modifier.fillMaxHeight()
         ) {
+
             items(featureList.size) {
                 CurrentCryptoItem(featureList[it])
             }

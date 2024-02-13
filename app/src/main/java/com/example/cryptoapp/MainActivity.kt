@@ -173,6 +173,8 @@ private val mockData = CryptoCurrencyInfo(
         Pair("May", 10000f),
         Pair("June", 12300f)
     )
+
+
 )
 
 
@@ -334,6 +336,23 @@ fun CurrentCryptoItemColumn(featureList: List<Feature>) {
 }
 
 
+
+
+@Composable
+@Preview
+fun PreviewCryptoItem(){
+    CurrentCryptoItem(
+        feature = Feature(
+            4,
+            title = "April",
+            R.drawable.light_bulb,
+            Beige1,
+            Beige2,
+            Beige3
+        )
+    )
+}
+
 @Composable
 fun CurrentCryptoItem(
     feature: Feature? = null
@@ -349,7 +368,7 @@ fun CurrentCryptoItem(
         val height = constraints.maxHeight
 
         //Medium colored path
-        val mediumColoredPoint1 = Offset(0f, height * 0.3f)
+        val mediumColoredPoint1 = Offset(0f, height * 0.6f)
         val mediumColoredPoint2 = Offset(width * 0.1f, height * 0.35f)
         val mediumColoredPoint3 = Offset(width * 0.4f, height * 0.05f)
         val mediumColoredPoint4 = Offset(width * 0.75f, height * 0.7f)
@@ -367,9 +386,13 @@ fun CurrentCryptoItem(
 
         }
 
+        val alatMediumColoredPoint1 = Offset(0f, height * 0.3f)
+        val alatMediumColoredPoint2 = Offset(0f, height * 0.4f)
+
+
 
         //Light colored path
-        val lightPoint1 = Offset(0f, height * 0.35f)
+        val lightPoint1 = Offset(0f, height * 0.65f)
         val lightPoint2 = Offset(width * 0.1f, height * 0.4f)
         val lightPoint3 = Offset(width * 0.3f, height * 0.35f)
         val lightPoint4 = Offset(width * 0.65f, height.toFloat())
@@ -391,11 +414,11 @@ fun CurrentCryptoItem(
         Canvas(modifier = Modifier.fillMaxSize()) {
             drawPath(
                 path = mediumColoredPath,
-                color = feature.mediumColor
+                color = Color.Red
             )
             drawPath(
                 path = lightColoredPath,
-                color = feature.lightColor
+                color = Color.Cyan
             )
         }
 
@@ -424,6 +447,7 @@ fun CurrentCryptoItem(
             val monthlyPreview = mockData.monthlyPreview
             val maxMonthValue = monthlyPreview.maxBy { it.second }.second
             val columnHeight = monthlyPreview[feature.position - 1].second / maxMonthValue
+
 
             Column(
                 modifier = Modifier

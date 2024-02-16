@@ -26,6 +26,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -336,21 +338,119 @@ fun CurrentCryptoItemColumn(featureList: List<Feature>) {
 }
 
 
-
-
 @Composable
 @Preview
-fun PreviewCryptoItem(){
-    CurrentCryptoItem(
-        feature = Feature(
-            4,
-            title = "April",
-            R.drawable.light_bulb,
-            Beige1,
-            Beige2,
-            Beige3
+fun PreviewCryptoItem() {
+    CryptoAppTheme {
+        AlatGradientBackground()
+    }
+
+}
+
+@Composable
+fun AlatGradientBackground() {
+
+    BoxWithConstraints(
+        modifier = Modifier
+            .height(156.dp)
+            .width(400.dp)
+            .background(Color(0XFF6B214A))
+            .clip(RoundedCornerShape(10.dp))
+    ) {
+
+        val width = constraints.maxWidth
+        val height = constraints.maxHeight
+
+        val alatCurvePoint1 = Offset(x = 0f, y = height * 0.55f)
+        val alatCurvePoint2 = Offset(x = width * 0.3f, y = height * 0.35f)
+        val alatCurvePoint3 = Offset(x = width * 0.6f, y = 0.0f)
+
+        val alatCurvedPath = Path().apply {
+            moveTo(alatCurvePoint1.x, alatCurvePoint1.y)
+            standardQuadFromTo(alatCurvePoint1, alatCurvePoint2)
+            standardQuadFromTo(alatCurvePoint2, alatCurvePoint3)
+            lineTo(width * 0.6f, 0.0f)
+            lineTo(0f, 0f)
+            close()
+        }
+
+        val alatCurveDeepPoint1 = Offset(x = width * 0.35f, y = height * 1f)
+        val alatCurveDeepPoint2 = Offset(x = width * 0.5f, y = height * 0.9f)
+        val alatCurveDeepPoint3 = Offset(x = width * 1f - 30f, y = 0f)
+
+
+        val alatCurvedPath2 = Path().apply {
+            moveTo(alatCurveDeepPoint1.x, alatCurveDeepPoint1.y)
+            standardQuadFromTo(alatCurveDeepPoint1, alatCurveDeepPoint2)
+            standardQuadFromTo(alatCurveDeepPoint2, alatCurveDeepPoint3)
+            lineTo(width * 1f - 30f, 0.0f)
+            lineTo(width * 1f, 0.0f)
+            lineTo(width * 1f, height * 1f)
+            close()
+        }
+
+        val brush = Brush.linearGradient(
+            0.0f to Color(0XFFB2214A),
+            500.0f to Color(0XFF6B214A),
+            start = Offset.Zero,
+            end = Offset.Infinite
         )
-    )
+
+        val brush2 = Brush.linearGradient(
+            0.0f to Color(0XFFB2214A),
+            200.0f to Color(0XFF6B214A),
+            start = Offset(x = 200f, y = 0f),
+            end = Offset.Infinite
+        )
+
+        Canvas(
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(8.dp))
+        ) {
+            drawRect(brush)
+            drawPath(
+                path = alatCurvedPath,
+                color = Color(0XFFB2214A)
+            )
+            drawPath(
+                path = alatCurvedPath2,
+                color = Color(0XFF6B214A).copy(alpha = 0.2f)
+            )
+
+        }
+
+
+        Text(
+            modifier = Modifier
+                .padding(start = 8.dp)
+                .align(Alignment.CenterStart),
+            text = "Approve Verifier",
+            color = Color.White
+        )
+
+        Row(modifier = Modifier
+            .padding(start = 8.dp, bottom = 16.dp)
+            .align(Alignment.BottomStart),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(0.dp)){
+
+            Text(
+                text = "Open",
+                color = Color.White
+            )
+            Icon(modifier = Modifier.padding(top = 2.dp).size(16.dp),
+                imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "",
+                tint = Color.White
+            )
+        }
+        Image(
+            modifier = Modifier.align(Alignment.BottomEnd),
+            painter = painterResource(id = R.drawable.users), contentDescription = ""
+        )
+
+
+    }
 }
 
 @Composable
@@ -380,7 +480,7 @@ fun CurrentCryptoItem(
             standardQuadFromTo(mediumColoredPoint2, mediumColoredPoint3)
             standardQuadFromTo(mediumColoredPoint3, mediumColoredPoint4)
             standardQuadFromTo(mediumColoredPoint4, mediumColoredPoint5)
-            lineTo(width.toFloat() + 100f, height.toFloat() + 100f)
+            lineTo(width.toFloat() + 100f, height.toFloat() * 100f)
             lineTo(-100f, height.toFloat() + 100f)
             close()
 
@@ -388,7 +488,6 @@ fun CurrentCryptoItem(
 
         val alatMediumColoredPoint1 = Offset(0f, height * 0.3f)
         val alatMediumColoredPoint2 = Offset(0f, height * 0.4f)
-
 
 
         //Light colored path
@@ -414,11 +513,11 @@ fun CurrentCryptoItem(
         Canvas(modifier = Modifier.fillMaxSize()) {
             drawPath(
                 path = mediumColoredPath,
-                color = Color.Red
+                color = feature.mediumColor
             )
             drawPath(
                 path = lightColoredPath,
-                color = Color.Cyan
+                color = feature.lightColor
             )
         }
 
